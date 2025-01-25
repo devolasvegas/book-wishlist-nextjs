@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import { useBookStore, type BookStore, type Book } from "../store/useBookStore";
 import BookCard from "./BookCard";
 

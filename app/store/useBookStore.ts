@@ -31,7 +31,7 @@ export const useBookStore = create<BookStore>((set) => ({
       author: "Frank Herbert",
       title: "Dune",
       genre: "Fiction",
-      status: true,
+      is_read: true,
     },
   ],
   setBooks: (books) => set({ books }),
