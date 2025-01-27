@@ -18,22 +18,7 @@ export interface BookStore {
 }
 
 export const useBookStore = create<BookStore>((set) => ({
-  books: [
-    {
-      id: "1",
-      author: "F. Scott Fitzgerald",
-      title: "The Great Gatsby",
-      genre: "Fiction",
-      is_read: true,
-    },
-    {
-      id: "2",
-      author: "Frank Herbert",
-      title: "Dune",
-      genre: "Fiction",
-      is_read: true,
-    },
-  ],
+  books: [],
   setBooks: (books) => set({ books }),
   addBook: (book) => set((state) => ({ books: [...state.books, book] })),
   updateBookStatus: (id, status) =>
