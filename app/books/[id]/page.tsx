@@ -1,3 +1,8 @@
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+
+import BookDetail from "@/app/components/BookDetail";
+
 import { getBook } from "@/app/actions";
 
 export default async function Page({
@@ -6,9 +11,19 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const id = (await params).id;
-  const { book, message } = await getBook(id);
+  const book = getBook(id);
 
-  console.log(book, message);
+  if (!book) {
+    notFound();
+  }
 
-  return <div>My Book {id}</div>;
+  return (
+    <main>
+      <div className="container mx-auto p-4">
+        <Suspense fallback={<p>Loading...</p>}>
+          <BookDetail book={book} />
+        </Suspense>
+      </div>
+    </main>
+  );
 }

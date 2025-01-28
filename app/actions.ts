@@ -56,6 +56,7 @@ export async function getBook(id: string): Promise<{
         author
         genre
         is_read
+        description
       }
     }`,
     variables: {
