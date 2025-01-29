@@ -11,13 +11,6 @@ const Modal = ({
     <div className={`modal ${isOpen ? "is-active" : ""}`}>
       <div className="modal-background" onClick={onClose}></div>
       <div className="modal-content">{children}</div>
-      <button
-        className="modal-close is-large"
-        aria-label="close"
-        onClick={onClose}
-      >
-        Close
-      </button>
     </div>
   );
 };

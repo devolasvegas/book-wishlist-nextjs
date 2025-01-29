@@ -90,13 +90,8 @@ export async function getBook(id: string): Promise<{
   };
 }
 
-export async function updateBook(formData: FormData): Promise<void> {
-  const id = formData.get("id");
-  const title = formData.get("title");
-  const author = formData.get("author");
-  const genre = formData.get("genre");
-  const description = formData.get("description");
-  const is_read = formData.get("is_read");
+export async function updateBook(formValues: Book): Promise<void> {
+  console.log(formValues);
 
   return;
 }

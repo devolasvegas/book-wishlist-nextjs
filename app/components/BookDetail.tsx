@@ -1,7 +1,14 @@
 "use client";
 
-import { use, useState } from "react";
-import { Button, Input, Label, Field, Switch } from "@headlessui/react";
+import { use, useEffect, useState } from "react";
+import {
+  Button,
+  Input,
+  Label,
+  Field,
+  Switch,
+  Textarea,
+} from "@headlessui/react";
 
 import { type Book } from "../store/useBookStore";
 import Modal from "./Modal";
@@ -16,8 +23,41 @@ const BookDetail = ({
     message: string | null;
   }>;
 }) => {
+  const [formValues, setFormValues] = useState<Book>({
+    id: "",
+    title: "",
+    author: "",
+    genre: "",
+    description: "",
+    is_read: false,
+  });
   const [isOpen, setIsOpen] = useState(false);
   const { book: bookDetail, message } = use(book);
+
+  useEffect(() => {
+    if (bookDetail) {
+      setFormValues(bookDetail);
+    }
+  }, [bookDetail]);
+
+  const handleOnChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+      | { target: { name: string; value: boolean } }
+  ) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>,
+    formValues: Book
+  ) => {
+    e.preventDefault();
+    updateBook(formValues);
+  };
 
   return (
     <>
@@ -57,10 +97,20 @@ const BookDetail = ({
             </Button>
           </div>
           <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-            <div className="px-10 py-10 border rounded shadow-sm bg-white w-96 max-w-full">
+            <div className="px-10 py-10 border rounded shadow-sm bg-white max-w-3xl mx-auto relative">
+              <div className="absolute right-10 top-6">
+                <button
+                  className="modal-close is-large"
+                  aria-label="close"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Close
+                </button>
+              </div>
               <div className="mb-9">
                 <h1 className="h1">Edit Book Details</h1>
-                <form action={updateBook}>
+                <form onSubmit={(e) => handleSubmit(e, formValues)}>
+                  <input type="hidden" name="id" value={bookDetail.id} />
                   <Field className="mb-8">
                     <Label className="text-lg/3" htmlFor="title">
                       Title
@@ -70,7 +120,8 @@ const BookDetail = ({
                       id="title"
                       name="title"
                       type="text"
-                      defaultValue={bookDetail.title}
+                      value={formValues.title}
+                      onChange={handleOnChange}
                     />
                   </Field>
                   <Field className="mb-8">
@@ -82,7 +133,8 @@ const BookDetail = ({
                       id="author"
                       name="author"
                       type="text"
-                      defaultValue={bookDetail.author}
+                      value={formValues.author}
+                      onChange={handleOnChange}
                     />
                   </Field>
                   <Field className="mb-8">
@@ -94,7 +146,8 @@ const BookDetail = ({
                       id="genre"
                       name="genre"
                       type="text"
-                      defaultValue={bookDetail.genre}
+                      value={formValues.genre}
+                      onChange={handleOnChange}
                     />
                   </Field>
                   <Field className="mb-8">
@@ -105,8 +158,13 @@ const BookDetail = ({
                       <Switch
                         id="is_read"
                         name="is_read"
-                        onChange={() => console.log("toggled")}
-                        className="border group relative flex h-7 w-14 cursor-pointer rounded-full bg-white/10 p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-white/10"
+                        checked={formValues.is_read}
+                        onChange={(checked) =>
+                          handleOnChange({
+                            target: { name: "is_read", value: checked },
+                          })
+                        }
+                        className="border group relative flex h-7 w-14 cursor-pointer rounded-full bg-white/10 p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-green-200"
                       >
                         <span
                           aria-hidden="true"
@@ -114,9 +172,22 @@ const BookDetail = ({
                         />
                       </Switch>
                       <p className="text-lg/3 text-gray-600" aria-live="polite">
-                        {bookDetail.is_read ? "Read" : "Want to Read"}
+                        {formValues.is_read ? "Read" : "Want to Read"}
                       </p>
                     </div>
+                  </Field>
+                  <Field className="mb-8">
+                    <Label className="text-lg/3" htmlFor="description">
+                      Description
+                    </Label>
+                    <Textarea
+                      id="description"
+                      name="description"
+                      className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg"
+                      rows={7}
+                      value={formValues.description}
+                      onChange={handleOnChange}
+                    />
                   </Field>
                   <Button
                     className="border rounded bg-green-500 text-white"
