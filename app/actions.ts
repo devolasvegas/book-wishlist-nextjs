@@ -89,3 +89,15 @@ export async function getBook(id: string): Promise<{
     message: null,
   };
 }
+
+export async function updateBook(book: Book): Promise<{
+  book: Book | null;
+  message: string | null;
+}> {
+  console.log(book);
+
+  return {
+    book: book,
+    message: null,
+  };
+}
