@@ -90,14 +90,13 @@ export async function getBook(id: string): Promise<{
   };
 }
 
-export async function updateBook(book: Book): Promise<{
-  book: Book | null;
-  message: string | null;
-}> {
-  console.log(book);
+export async function updateBook(formData: FormData): Promise<void> {
+  const id = formData.get("id");
+  const title = formData.get("title");
+  const author = formData.get("author");
+  const genre = formData.get("genre");
+  const description = formData.get("description");
+  const is_read = formData.get("is_read");
 
-  return {
-    book: book,
-    message: null,
-  };
+  return;
 }
