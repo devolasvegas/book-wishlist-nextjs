@@ -11,6 +11,8 @@ export interface Book {
 
 export interface BookStore {
   books: Book[];
+  book: Book | null;
+  setBook: (book: Book | null) => void;
   setBooks: (books: Book[]) => void;
   addBook: (book: Book) => void;
   updateBookStatus: (id: string, status: "Want to Read" | "Read") => void;
@@ -19,6 +21,8 @@ export interface BookStore {
 
 export const useBookStore = create<BookStore>((set) => ({
   books: [],
+  book: null,
+  setBook: (book) => set({ book }),
   setBooks: (books) => set({ books }),
   addBook: (book) => set((state) => ({ books: [...state.books, book] })),
   updateBookStatus: (id, status) =>

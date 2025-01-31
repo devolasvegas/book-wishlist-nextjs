@@ -61,6 +61,7 @@ body {
   position: relative;
   z-index: 1;
   width: 100%;
+  overflow: auto;
 }
 
 .modal-close {

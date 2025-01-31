@@ -91,7 +91,34 @@ export async function getBook(id: string): Promise<{
 }
 
 export async function updateBook(formValues: Book): Promise<void> {
-  console.log(formValues);
+  const mutation = {
+    mutation: `{
+      updatebooksCollection(set: { is_read: true }, filter: { id: {eq: 2}}) {
+        affectedCount
+        records {
+          title
+        }
+      }
+    }`,
+    variables: { id: formValues.id, updates: formValues },
+  };
+
+  const response = await fetch(
+    process.env.SUPABASE_GRAPHQL_ENDPOINT as string,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: process.env.SUPABASE_ANON_KEY as string,
+      },
+      body: JSON.stringify(mutation),
+    }
+  ).then((res) => {
+    console.log(res);
+    return res.json();
+  });
+
+  console.log(response);
 
   return;
 }
