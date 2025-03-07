@@ -32,8 +32,6 @@ export async function getBooks(): Promise<{
 
   const response = await client.query({ query });
 
-  console.log(response);
-
   if (!response.data) {
     console.warn(
       new Error(`Failed to fetch Book List: ${response.errors?.[0].message}`)
@@ -54,8 +52,8 @@ export async function getBook(id: string): Promise<{
   book: Book | null;
   message: string | null;
 }> {
-  const query = {
-    query: `{
+  const query = gql`
+    query getBook($id: String!) {
       bookById(bookId: $id) {
         id
         title
@@ -64,27 +62,17 @@ export async function getBook(id: string): Promise<{
         is_read
         description
       }
-    }`,
-    variables: {
-      id,
-    },
-  };
-
-  const response = await fetch(
-    process.env.SUPABASE_GRAPHQL_ENDPOINT as string,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: process.env.SUPABASE_ANON_KEY as string,
-      },
-      body: JSON.stringify(query),
     }
-  ).then((res) => res.json());
+  `;
+
+  const response = await client.query({
+    query,
+    variables: { id },
+  });
 
   if (!response.data) {
     console.warn(
-      new Error(`Failed to fetch Book: ${response.errors[0]?.message}`)
+      new Error(`Failed to fetch Book: ${response.errors?.[0]?.message}`)
     );
 
     return { book: null, message: "Failed to fetch Book" };
