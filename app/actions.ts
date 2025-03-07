@@ -1,5 +1,9 @@
 "use server";
 
+import { gql } from "@apollo/client";
+
+import client from "./lib/apolloClient";
+
 import { type Book } from "./store/useBookStore";
 
 interface BooksEdge {
@@ -10,27 +14,29 @@ export async function getBooks(): Promise<{
   books: Book[];
   message: string | null;
 }> {
-  const query = {
-    query:
-      "{ booksCollection { edges { node { id title author genre is_read } } } }",
-    variables: {},
-  };
-
-  const response = await fetch(
-    process.env.SUPABASE_GRAPHQL_ENDPOINT as string,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: process.env.SUPABASE_ANON_KEY as string,
-      },
-      body: JSON.stringify(query),
+  const query = gql`
+    query {
+      booksCollection {
+        edges {
+          node {
+            id
+            title
+            author
+            genre
+            is_read
+          }
+        }
+      }
     }
-  ).then((res) => res.json());
+  `;
+
+  const response = await client.query({ query });
+
+  console.log(response);
 
   if (!response.data) {
     console.warn(
-      new Error(`Failed to fetch Book List: ${response.errors[0]?.message}`)
+      new Error(`Failed to fetch Book List: ${response.errors?.[0].message}`)
     );
 
     return { books: [], message: "Failed to fetch Book List" };
