@@ -46,7 +46,6 @@ const EditBookModal = ({
       | { target: { name: string; value: boolean } }
   ) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
