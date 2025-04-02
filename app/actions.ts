@@ -6,26 +6,19 @@ import client from "./lib/apolloClient";
 
 import { type Book } from "./store/useBookStore";
 
-interface BooksEdge {
-  node: Book;
-}
-
 export async function getBooks(): Promise<{
   books: Book[];
   message: string | null;
 }> {
   const query = gql`
     query {
-      booksCollection {
-        edges {
-          node {
-            id
-            title
-            author
-            genre
-            is_read
-          }
-        }
+      books {
+        author
+        description
+        genre
+        id
+        is_read
+        title
       }
     }
   `;
@@ -41,9 +34,7 @@ export async function getBooks(): Promise<{
   }
 
   return {
-    books: response.data.booksCollection.edges.map(
-      (edge: BooksEdge) => edge.node
-    ),
+    books: response.data.books,
     message: null,
   };
 }
@@ -53,8 +44,8 @@ export async function getBook(id: string): Promise<{
   message: string | null;
 }> {
   const query = gql`
-    query getBook($id: String!) {
-      bookById(bookId: $id) {
+    query getBook($id: uuid!) {
+      books(where: { id: { _eq: $id } }) {
         id
         title
         author
@@ -78,41 +69,43 @@ export async function getBook(id: string): Promise<{
     return { book: null, message: "Failed to fetch Book" };
   }
 
+  // Destructuring the __typename field from the response here to remove it from the response data
+  const { __typename, ...book } = response.data.books[0]; // eslint-disable-line
+
   return {
-    book: response.data.bookById,
+    book: book,
     message: null,
   };
 }
 
-export async function updateBook(formValues: Book): Promise<void> {
-  const mutation = {
-    mutation: `{
-      updatebooksCollection(set: { is_read: true }, filter: { id: {eq: 2}}) {
-        affectedCount
-        records {
-          title
-        }
+export async function updateBook(
+  id: string,
+  formValues: Book
+): Promise<{ message: string | null }> {
+  const mutation = gql`
+    mutation updateBook($id: uuid!, $updates: books_set_input!) {
+      update_books_by_pk(pk_columns: { id: $id }, _set: $updates) {
+        id
+        title
       }
-    }`,
-    variables: { id: formValues.id, updates: formValues },
-  };
-
-  const response = await fetch(
-    process.env.SUPABASE_GRAPHQL_ENDPOINT as string,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: process.env.SUPABASE_ANON_KEY as string,
-      },
-      body: JSON.stringify(mutation),
     }
-  ).then((res) => {
-    console.log(res);
-    return res.json();
+  `;
+
+  const response = await client.mutate({
+    mutation,
+    variables: { id: id, updates: formValues },
+    errorPolicy: "all",
   });
 
-  console.log(response);
+  if (!response.data) {
+    console.warn(
+      new Error(`Failed to update Book: ${response.errors?.[0]?.message}`)
+    );
 
-  return;
+    return { message: "Failed to update Book" };
+  }
+
+  return {
+    message: null,
+  };
 }

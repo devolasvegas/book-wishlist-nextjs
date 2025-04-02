@@ -1,13 +1,14 @@
 import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 
-const supabaseGraphQLUrl = process.env.SUPABASE_GRAPHQL_ENDPOINT;
+const hasuraUrl = process.env.HASURA_GRAPHQL_ENDPOINT;
+const hasuraAdminSecret = process.env.HASURA_ADMIN_SECRET;
 
 const client = new ApolloClient({
   ssrMode: typeof window === "undefined",
   link: new HttpLink({
-    uri: supabaseGraphQLUrl,
+    uri: hasuraUrl,
     headers: {
-      apikey: process.env.SUPABASE_ANON_KEY as string,
+      "x-hasura-admin-secret": hasuraAdminSecret as string,
     },
   }),
   cache: new InMemoryCache(),
