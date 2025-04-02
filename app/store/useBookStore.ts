@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 export interface Book {
+  __typename?: string;
   id: string;
   title: string;
   author: string;
