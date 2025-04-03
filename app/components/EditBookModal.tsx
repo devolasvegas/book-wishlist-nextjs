@@ -16,6 +16,7 @@ import Modal from "./Modal";
 
 import { updateBook } from "../actions";
 import { Book, BookStore, useBookStore } from "../store/useBookStore";
+import { stat } from "fs";
 
 const EditBookModal = ({
   isOpen,
@@ -32,7 +33,9 @@ const EditBookModal = ({
     description: "",
     is_read: false,
   });
+  const [loading, setLoading] = useState(false);
   const bookDetail = useBookStore((state: BookStore) => state.book);
+  const setBook = useBookStore((state: BookStore) => state.setBook);
 
   useEffect(() => {
     if (bookDetail) {
@@ -50,12 +53,40 @@ const EditBookModal = ({
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (
+  const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     formValues: Book
   ) => {
     e.preventDefault();
-    updateBook(formValues);
+
+    setLoading(true);
+
+    const { id, ...book } = formValues;
+
+    const response = await updateBook(id, { ...(book as Book), dookie: true });
+
+    if (!response.message) {
+      setLoading(false);
+
+      setBook({ id, ...book } as Book);
+      // TODO: Show success message
+      toast("Book details updated successfully!", {
+        // position: "top-right",
+        // autoClose: 5000,
+        // hideProgressBar: false,
+        // closeOnClick: true,
+        // pauseOnHover: true,
+        // draggable: true,
+        type: "success",
+      });
+
+      setLoading(false);
+
+      return;
+    }
+
+    toast(response.message, { type: "error" });
+    setLoading(false);
   };
 
   return (

@@ -17,11 +17,12 @@ const BookDetail = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const setBook = useBookStore((state: BookStore) => state.setBook);
-  const { book: bookDetail, message } = use(book);
+  const bookDetail = useBookStore((state: BookStore) => state.book);
+  const { book: bookData, message } = use(book);
 
   useEffect(() => {
-    setBook(bookDetail);
-  }, [bookDetail, setBook]);
+    setBook(bookData);
+  }, [bookData, setBook]);
 
   return (
     <>

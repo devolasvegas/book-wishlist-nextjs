@@ -1,6 +1,4 @@
 import { Suspense } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import { getBooks } from "./actions";
 
@@ -18,14 +16,6 @@ export default async function Home() {
           <BookList books={books} />
         </Suspense>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-        draggable
-      />
     </main>
   );
 }
