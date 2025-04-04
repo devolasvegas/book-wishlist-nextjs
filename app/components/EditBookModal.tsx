@@ -63,7 +63,7 @@ const EditBookModal = ({
 
     const { id, ...book } = formValues;
 
-    const response = await updateBook(id, { ...(book as Book), dookie: true });
+    const response = await updateBook(id, book as Book);
 
     if (!response.message) {
       setLoading(false);
@@ -102,7 +102,13 @@ const EditBookModal = ({
           </button>
         </div>
         {bookDetail ? (
-          <div className="mb-9">
+          <div className="mb-9 relative">
+            {loading && (
+              <div
+                className="absolute inset-0"
+                style={{ backdropFilter: "blur(3px)" }}
+              />
+            )}
             <h2 className="h1">Edit Book Details</h2>
             <form onSubmit={(e) => handleSubmit(e, formValues)}>
               <input type="hidden" name="id" value={bookDetail.id} />
