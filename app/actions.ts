@@ -82,6 +82,7 @@ export async function updateBook(
   id: string,
   formValues: Book
 ): Promise<{ message: string | null }> {
+  console.log("Updating book with ID:", id);
   const mutation = gql`
     mutation updateBook($id: uuid!, $updates: books_set_input!) {
       update_books_by_pk(pk_columns: { id: $id }, _set: $updates) {

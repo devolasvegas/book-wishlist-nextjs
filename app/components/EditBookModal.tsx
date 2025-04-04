@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { z } from "zod";
 
 import {
   Button,
@@ -16,6 +17,7 @@ import Modal from "./Modal";
 
 import { updateBook } from "../actions";
 import { Book, BookStore, useBookStore } from "../store/useBookStore";
+import { bookSchema } from "../lib/zodSchemata";
 
 const EditBookModal = ({
   isOpen,
@@ -33,6 +35,7 @@ const EditBookModal = ({
     is_read: false,
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>();
   const bookDetail = useBookStore((state: BookStore) => state.book);
   const setBook = useBookStore((state: BookStore) => state.setBook);
 
@@ -42,7 +45,7 @@ const EditBookModal = ({
     }
   }, [bookDetail]);
 
-  const handleOnChange = (
+  const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLTextAreaElement>
@@ -59,33 +62,50 @@ const EditBookModal = ({
     e.preventDefault();
 
     setLoading(true);
+    // Clear previous errors
+    setErrors({});
 
     const { id, ...book } = formValues;
 
-    const response = await updateBook(id, book as Book);
+    try {
+      // Validate the book data
+      // This will throw an error if the data is invalid
+      // and we can catch it in the catch block
+      // and set the errors state
+      bookSchema.parse(formValues);
 
-    if (!response.message) {
-      setLoading(false);
+      const response = await updateBook(id, book as Book);
 
-      setBook({ id, ...book } as Book);
-      // TODO: Show success message
-      toast("Book details updated successfully!", {
-        // position: "top-right",
-        // autoClose: 5000,
-        // hideProgressBar: false,
-        // closeOnClick: true,
-        // pauseOnHover: true,
-        // draggable: true,
-        type: "success",
-      });
+      if (!response.message) {
+        setBook({ id, ...book } as Book);
 
-      setLoading(false);
-
-      return;
+        toast("Book details updated successfully!", {
+          type: "success",
+        });
+      } else {
+        toast(response.message, { type: "error" });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Handle Zod validation errors
+        const fieldErrors: { [key: string]: string } = {};
+        // Add each error to our errors object
+        // The error object has a path property that is an array of strings
+        // The first element of the array is the field name
+        // and the second element is the error message
+        error.errors.forEach((err) => {
+          const field = err.path[0];
+          fieldErrors[field] = err.message;
+        });
+        setErrors(fieldErrors);
+      }
     }
 
-    toast(response.message, { type: "error" });
     setLoading(false);
+  };
+
+  const ErrorMessage = ({ message }: { message: string | undefined }) => {
+    return <div className="text-red-500 text-sm mt-1">{message}</div>;
   };
 
   return (
@@ -101,7 +121,7 @@ const EditBookModal = ({
           </button>
         </div>
         {bookDetail ? (
-          <div className="mb-9 relative">
+          <div className="mb-9">
             {loading && (
               <div
                 className="absolute inset-0"
@@ -121,8 +141,9 @@ const EditBookModal = ({
                   name="title"
                   type="text"
                   value={formValues.title}
-                  onChange={handleOnChange}
+                  onChange={handleChange}
                 />
+                <ErrorMessage message={errors?.title} />
               </Field>
               <Field className="mb-8">
                 <Label className="text-lg/3" htmlFor="author">
@@ -134,8 +155,9 @@ const EditBookModal = ({
                   name="author"
                   type="text"
                   value={formValues.author}
-                  onChange={handleOnChange}
+                  onChange={handleChange}
                 />
+                <ErrorMessage message={errors?.author} />
               </Field>
               <Field className="mb-8">
                 <Label className="text-lg/3" htmlFor="genre">
@@ -147,8 +169,9 @@ const EditBookModal = ({
                   name="genre"
                   type="text"
                   value={formValues.genre}
-                  onChange={handleOnChange}
+                  onChange={handleChange}
                 />
+                <ErrorMessage message={errors?.genre} />
               </Field>
               <Field className="mb-8">
                 <Label className="text-lg/3" htmlFor="is_read">
@@ -160,7 +183,7 @@ const EditBookModal = ({
                     name="is_read"
                     checked={formValues.is_read}
                     onChange={(checked) =>
-                      handleOnChange({
+                      handleChange({
                         target: { name: "is_read", value: checked },
                       })
                     }
@@ -175,6 +198,7 @@ const EditBookModal = ({
                     {formValues.is_read ? "Read" : "Want to Read"}
                   </p>
                 </div>
+                <ErrorMessage message={errors?.is_read} />
               </Field>
               <Field className="mb-8">
                 <Label className="text-lg/3" htmlFor="description">
@@ -186,8 +210,9 @@ const EditBookModal = ({
                   className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg"
                   rows={7}
                   value={formValues.description}
-                  onChange={handleOnChange}
+                  onChange={handleChange}
                 />
+                <ErrorMessage message={errors?.description} />
               </Field>
               <Button
                 className="border rounded bg-green-500 text-white"
