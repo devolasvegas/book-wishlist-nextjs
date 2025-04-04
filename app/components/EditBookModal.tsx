@@ -16,7 +16,6 @@ import Modal from "./Modal";
 
 import { updateBook } from "../actions";
 import { Book, BookStore, useBookStore } from "../store/useBookStore";
-import { stat } from "fs";
 
 const EditBookModal = ({
   isOpen,
