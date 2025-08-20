@@ -23,7 +23,7 @@ export async function getBooks(): Promise<{
     }
   `;
 
-  const response = await client.query({ query });
+  const response = await client.query({ query, fetchPolicy: "no-cache" });
 
   if (!response.data) {
     console.warn(
