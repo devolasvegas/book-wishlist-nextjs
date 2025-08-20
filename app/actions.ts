@@ -81,13 +81,17 @@ export async function getBook(id: string): Promise<{
 export async function updateBook(
   id: string,
   formValues: Book
-): Promise<{ message: string | null }> {
+): Promise<{ message: string | null; book: Book | null }> {
   console.log("Updating book with ID:", id);
   const mutation = gql`
     mutation updateBook($id: uuid!, $updates: books_set_input!) {
       update_books_by_pk(pk_columns: { id: $id }, _set: $updates) {
         id
         title
+        author
+        description
+        genre
+        is_read
       }
     }
   `;
@@ -103,10 +107,11 @@ export async function updateBook(
       new Error(`Failed to update Book: ${response.errors?.[0]?.message}`)
     );
 
-    return { message: "Failed to update Book" };
+    return { message: "Failed to update Book", book: null };
   }
 
   return {
     message: null,
+    book: response.data.update_books_by_pk,
   };
 }

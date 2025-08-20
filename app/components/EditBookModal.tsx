@@ -77,7 +77,7 @@ const EditBookModal = ({
       const response = await updateBook(id, book as Book);
 
       if (!response.message) {
-        setBook({ id, ...book } as Book);
+        setBook({ id, ...response.book } as Book);
 
         toast("Book details updated successfully!", {
           type: "success",
