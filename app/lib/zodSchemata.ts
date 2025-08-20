@@ -8,3 +8,5 @@ export const bookSchema = z.object({
   is_read: z.boolean().optional(),
   description: z.string().optional(),
 });
+
+// RIP Terence Stamp, 22 July 1938 – 17 August 2025
