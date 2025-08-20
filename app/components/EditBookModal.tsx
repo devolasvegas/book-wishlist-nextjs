@@ -70,7 +70,7 @@ const EditBookModal = ({
     try {
       // Validate the book data
       // This will throw an error if the data is invalid
-      // and we can catch it in the catch block
+      // and we can catch it
       // and set the errors state
       bookSchema.parse(formValues);
 
