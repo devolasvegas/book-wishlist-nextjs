@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { notFound } from "next/navigation";
 
 import BookDetail from "@/app/components/BookDetail";
 import { BookDetailsSkeleton } from "@/app/components/skeletons";
@@ -11,10 +10,6 @@ export default async function Page({
 }) {
   const getParams = () => params;
   const id = getParams();
-
-  if (!id) {
-    notFound();
-  }
 
   return (
     <main>
