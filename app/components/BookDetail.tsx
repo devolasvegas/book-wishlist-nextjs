@@ -1,28 +1,38 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
+import { notFound } from "next/navigation";
+
 import { Button } from "@headlessui/react";
 
 import EditBookModal from "./EditBookModal";
 
-import { Book, BookStore, useBookStore } from "../store/useBookStore";
+import { BookStore, useBookStore } from "../store/useBookStore";
 
 const BookDetail = ({
-  book,
+  id,
 }: {
-  book: Promise<{
-    book: Book | null;
-    message: string | null;
+  id: Promise<{
+    id: string | null;
   }>;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const getBook = useBookStore((state: BookStore) => state.getBookById);
   const setBook = useBookStore((state: BookStore) => state.setBook);
   const bookDetail = useBookStore((state: BookStore) => state.book);
-  const { book: bookData, message } = use(book);
+
+  const { id: bookId } = use(id);
+
+  if (!bookId) {
+    notFound();
+  }
 
   useEffect(() => {
-    setBook(bookData);
-  }, [bookData, setBook]);
+    if (bookId) {
+      const book = getBook(bookId);
+      setBook(book);
+    }
+  }, [bookId, setBook, getBook]);
 
   return (
     <>
@@ -64,7 +74,7 @@ const BookDetail = ({
           <EditBookModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </>
       ) : null}
-      {message ? <p>{message}</p> : null}
+      {/* {message ? <p>{message}</p> : null} */}
     </>
   );
 };

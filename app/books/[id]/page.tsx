@@ -4,17 +4,15 @@ import { notFound } from "next/navigation";
 import BookDetail from "@/app/components/BookDetail";
 import { BookDetailsSkeleton } from "@/app/components/skeletons";
 
-import { getBook } from "@/app/actions";
-
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const id = (await params).id;
-  const book = getBook(id);
+  const getParams = () => params;
+  const id = getParams();
 
-  if (!book) {
+  if (!id) {
     notFound();
   }
 
@@ -23,7 +21,7 @@ export default async function Page({
       <div className="max-w-7xl mx-auto p-4 relative">
         <h1 className="h1 text-center">Book Details</h1>
         <Suspense fallback={<BookDetailsSkeleton />}>
-          <BookDetail book={book} />
+          <BookDetail id={id} />
         </Suspense>
       </div>
     </main>
