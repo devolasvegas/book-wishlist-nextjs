@@ -96,9 +96,11 @@ export async function updateBook(
     }
   `;
 
+  const { __typename, ...updates } = formValues; // eslint-disable-line
+
   const response = await client.mutate({
     mutation,
-    variables: { id: id, updates: formValues },
+    variables: { id: id, updates },
     errorPolicy: "all",
   });
 
