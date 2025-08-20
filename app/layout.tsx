@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,17 +31,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`}
       >
-        {children}
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          closeOnClick
-          pauseOnHover
-          draggable
-        />
+        <div className="flex flex-col justify-between h-full">
+          <div>
+            <Header />
+            {children}
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              closeOnClick
+              pauseOnHover
+              draggable
+            />
+          </div>
+          <Footer />
+        </div>
       </body>
     </html>
   );
