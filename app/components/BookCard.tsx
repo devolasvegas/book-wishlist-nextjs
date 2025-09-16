@@ -20,7 +20,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                 : "bg-yellow-100 text-yellow-800"
             }`}
           >
-            {book.is_read ? "Read" : "Want to Read"}
+            {book.is_read ? "Have Read" : "Want to Read"}
           </span>
         </p>
       </div>

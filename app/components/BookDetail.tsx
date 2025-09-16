@@ -51,7 +51,7 @@ const BookDetail = ({
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {bookDetail.is_read ? "Read" : "Want to Read"}
+                  {bookDetail.is_read ? "Have Read" : "Want to Read"}
                 </span>
               </p>
             </div>
