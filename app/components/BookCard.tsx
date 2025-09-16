@@ -37,7 +37,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
             style={{ padding: "0.75em 1em" }}
             href={`/books/${book.id}`}
           >
-            Edit Book Details
+            View Book Details
           </Link>
           <Button
             className="border rounded bg-red-600 text-white text-lg"
