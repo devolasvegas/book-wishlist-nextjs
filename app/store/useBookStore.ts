@@ -13,8 +13,6 @@ export interface Book {
 
 export interface BookStore {
   books: Book[];
-  book: Book | null;
-  setBook: (book: Book | undefined) => void;
   getBookById: (id: string) => Book | undefined;
   setBooks: (books: Book[]) => void;
   addBook: (book: Book) => void;
@@ -26,8 +24,6 @@ export const useBookStore = create<BookStore>()(
   persist(
     (set, get) => ({
       books: [],
-      book: null,
-      setBook: (book) => set({ book }),
       getBookById: (id) =>
         get().books.find((book) => {
           return book.id === id;
