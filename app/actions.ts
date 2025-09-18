@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 
 import client from "./lib/apolloClient";
 
-import { type Book } from "./store/useBookStore";
+import { type Book } from "./stores/book-store";
 
 export async function getBooks(): Promise<{
   books: Book[];
@@ -137,10 +137,36 @@ export async function deleteBook(id: string) {
 export async function addBook(
   formValues: Book
 ): Promise<{ message: string | null; book: Book | null }> {
-  console.log("Adding new book:", formValues.title);
+  let message = null;
+
+  const mutation = gql`
+    mutation addBook($book: books_insert_input!) {
+      insert_books_one(object: $book) {
+        id
+        title
+        author
+        description
+        genre
+        is_read
+      }
+    }
+  `;
+
+  const response = await client.mutate({
+    mutation,
+    variables: { book: formValues },
+    errorPolicy: "all",
+  });
+
+  if (!response.data) {
+    message = "Failed to add Book";
+    console.warn(new Error(`${message}: ${response.errors?.[0]?.message}`));
+
+    return { message, book: null };
+  }
 
   return {
-    message: null,
-    book: null,
+    message,
+    book: response.data.insert_books_one,
   };
 }
