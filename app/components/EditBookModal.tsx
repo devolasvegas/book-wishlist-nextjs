@@ -151,6 +151,7 @@ const EditBookModal = ({
     console.log("Closing modal");
     // Reset form state on close
     if (!isUpdate) {
+      // Only reset form values if we're adding a new book
       setFormValues(defaultFormValues);
     }
     setErrors({});
