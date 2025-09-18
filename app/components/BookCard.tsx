@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@headlessui/react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 import DeleteBookToast from "./DeleteBookToast";
 
@@ -17,6 +17,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
 
   const handleDelete = () => {
     return toast(DeleteBookToast, {
+      autoClose: false,
       closeButton: false,
       // remove the padding on the toast wrapper
       // make it 400px width
@@ -102,7 +103,6 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
           >
             Delete Book
           </Button>
-          <ToastContainer autoClose={false} />
         </div>
       </div>
     </div>

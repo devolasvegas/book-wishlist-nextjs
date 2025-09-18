@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 import {
@@ -245,7 +245,6 @@ const EditBookModal = ({
           </form>
         </div>
       </div>
-      <ToastContainer />
     </Modal>
   );
 };
