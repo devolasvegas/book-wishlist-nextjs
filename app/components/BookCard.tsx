@@ -23,7 +23,6 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
       // make it 400px width
       // add a thin purple border because I like purple
       className: "p-0 w-[400px] border border-red-600/40",
-      ariaLabel: "Email received",
       onClose: (reason?: boolean | string) =>
         handleToastClose(reason as string),
     });
