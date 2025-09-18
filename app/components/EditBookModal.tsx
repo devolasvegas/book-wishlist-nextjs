@@ -150,7 +150,9 @@ const EditBookModal = ({
   const handleClose = () => {
     console.log("Closing modal");
     // Reset form state on close
-    setFormValues(defaultFormValues);
+    if (!isUpdate) {
+      setFormValues(defaultFormValues);
+    }
     setErrors({});
     setIsSubmitDisabled(false);
     onClose();
