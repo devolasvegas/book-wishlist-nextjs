@@ -7,7 +7,7 @@ import { Button } from "@headlessui/react";
 
 import EditBookModal from "./EditBookModal";
 
-import { BookStore, useBookStore } from "../store/useBookStore";
+import { BookStore, useBookStore, type Book } from "../store/useBookStore";
 
 const BookDetail = ({
   id,
@@ -17,9 +17,9 @@ const BookDetail = ({
   }>;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [book, setBook] = useState<Book | undefined>(undefined);
+
   const getBook = useBookStore((state: BookStore) => state.getBookById);
-  const setBook = useBookStore((state: BookStore) => state.setBook);
-  const bookDetail = useBookStore((state: BookStore) => state.book);
 
   const { id: bookId } = use(id);
 
@@ -29,37 +29,34 @@ const BookDetail = ({
 
   useEffect(() => {
     if (bookId) {
-      const book = getBook(bookId);
-      setBook(book);
+      setBook(getBook(bookId));
     }
   }, [bookId, setBook, getBook]);
 
   return (
     <>
-      {bookDetail ? (
+      {book ? (
         <>
           <div className="px-4 py-10 border rounded shadow-sm">
             <div className="mb-9">
-              <h1 className="h1">{bookDetail.title}</h1>
-              <p className="text-gray-500">by {bookDetail.author}</p>
-              <p className="text-md text-gray-600">Genre: {bookDetail.genre}</p>
+              <h1 className="h1">{book.title}</h1>
+              <p className="text-gray-500">by {book.author}</p>
+              <p className="text-md text-gray-600">Genre: {book.genre}</p>
               <p className="mt-2">
                 <span
                   className={`px-2 py-1 text-s rounded ${
-                    bookDetail.is_read
+                    book.is_read
                       ? "bg-green-100 text-green-800"
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {bookDetail.is_read ? "Have Read" : "Want to Read"}
+                  {book.is_read ? "Have Read" : "Want to Read"}
                 </span>
               </p>
             </div>
             <div className="mb-9">
-              {bookDetail.description ? (
-                <p className="text-md text-gray-600">
-                  {bookDetail.description}
-                </p>
+              {book.description ? (
+                <p className="text-md text-gray-600">{book.description}</p>
               ) : null}
             </div>
             <Button
@@ -71,10 +68,15 @@ const BookDetail = ({
               Edit Book Details
             </Button>
           </div>
-          <EditBookModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          <EditBookModal
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+            book={book}
+            onUpdate={setBook}
+          />
         </>
       ) : null}
-      {/* {message ? <p>{message}</p> : null} */}
+      {/* {  ? <p>{message}</p> : null} */}
     </>
   );
 };

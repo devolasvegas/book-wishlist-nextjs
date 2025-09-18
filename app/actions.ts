@@ -134,6 +134,13 @@ export async function deleteBook(id: string) {
   });
 }
 
-export async function addBook(formValues: Book) {
-  console.log("Adding new book:");
+export async function addBook(
+  formValues: Book
+): Promise<{ message: string | null; book: Book | null }> {
+  console.log("Adding new book:", formValues.title);
+
+  return {
+    message: null,
+    book: null,
+  };
 }

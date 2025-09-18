@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { z } from "zod";
 
 import {
@@ -16,17 +16,21 @@ import {
 import Modal from "./Modal";
 
 import { updateBook, addBook } from "../actions";
-import { Book, BookStore, useBookStore } from "../store/useBookStore";
+import { type Book } from "../store/useBookStore";
 import { bookSchema } from "../lib/zodSchemata";
 
 const EditBookModal = ({
   isOpen,
   onClose,
   isUpdate = true,
+  book,
+  onUpdate,
 }: {
   isOpen: boolean;
   onClose: () => void;
   isUpdate?: boolean;
+  book?: Book;
+  onUpdate?: (book: Book) => void;
 }) => {
   const [formValues, setFormValues] = useState<Book>({
     id: "",
@@ -38,16 +42,15 @@ const EditBookModal = ({
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>();
-  const bookDetail = useBookStore((state: BookStore) => state.book);
-  const setBook = useBookStore((state: BookStore) => state.setBook);
 
   const formTitle = isUpdate ? "Edit Book Details" : "Add NewBook";
 
   useEffect(() => {
-    if (bookDetail) {
-      setFormValues(bookDetail);
+    if (book) {
+      console.log("Setting form values:", book);
+      setFormValues(book);
     }
-  }, [bookDetail]);
+  }, [book]);
 
   const handleChange = (
     e:
@@ -91,7 +94,9 @@ const EditBookModal = ({
       }
 
       if (!response.message) {
-        setBook({ id, ...response.book } as Book);
+        if (onUpdate && response.book) {
+          onUpdate(response.book as Book);
+        }
 
         toast("Book details updated successfully!", {
           type: "success",
@@ -100,6 +105,7 @@ const EditBookModal = ({
         toast(response.message, { type: "error" });
       }
     } catch (error) {
+      console.error("Error submitting form:", error);
       if (error instanceof z.ZodError) {
         // Handle Zod validation errors
         const fieldErrors: { [key: string]: string } = {};
@@ -134,115 +140,112 @@ const EditBookModal = ({
             Close
           </button>
         </div>
-        {bookDetail ? (
-          <div className="mb-9">
-            {loading && (
-              <div
-                className="absolute inset-0"
-                style={{ backdropFilter: "blur(3px)" }}
+        <div className="mb-9">
+          {loading && (
+            <div
+              className="absolute inset-0"
+              style={{ backdropFilter: "blur(3px)" }}
+            />
+          )}
+          <h2 className="h1">{formTitle}</h2>
+          <form onSubmit={(e) => handleSubmit(e, formValues)}>
+            {isUpdate && formValues.id ? (
+              <input type="hidden" name="id" value={formValues.id} />
+            ) : null}
+            <Field className="mb-8">
+              <Label className="text-lg/3" htmlFor="title">
+                Title
+              </Label>
+              <Input
+                className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
+                id="title"
+                name="title"
+                type="text"
+                value={formValues.title}
+                onChange={handleChange}
               />
-            )}
-            <h2 className="h1">{formTitle}</h2>
-            <form onSubmit={(e) => handleSubmit(e, formValues)}>
-              <input type="hidden" name="id" value={bookDetail.id} />
-              <Field className="mb-8">
-                <Label className="text-lg/3" htmlFor="title">
-                  Title
-                </Label>
-                <Input
-                  className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
-                  id="title"
-                  name="title"
-                  type="text"
-                  value={formValues.title}
-                  onChange={handleChange}
-                />
-                <ErrorMessage message={errors?.title} />
-              </Field>
-              <Field className="mb-8">
-                <Label className="text-lg/3" htmlFor="author">
-                  Author
-                </Label>
-                <Input
-                  className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
-                  id="author"
-                  name="author"
-                  type="text"
-                  value={formValues.author}
-                  onChange={handleChange}
-                />
-                <ErrorMessage message={errors?.author} />
-              </Field>
-              <Field className="mb-8">
-                <Label className="text-lg/3" htmlFor="genre">
-                  Genre
-                </Label>
-                <Input
-                  className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
-                  id="genre"
-                  name="genre"
-                  type="text"
-                  value={formValues.genre}
-                  onChange={handleChange}
-                />
-                <ErrorMessage message={errors?.genre} />
-              </Field>
-              <Field className="mb-8">
-                <Label className="text-lg/3" htmlFor="is_read">
-                  Status
-                </Label>
-                <div className="flex flex-row gap-2 items-center justify-start mt-3">
-                  <Switch
-                    id="is_read"
-                    name="is_read"
-                    checked={formValues.is_read}
-                    onChange={(checked) =>
-                      handleChange({
-                        target: { name: "is_read", value: checked },
-                      })
-                    }
-                    className="border group relative flex h-7 w-14 cursor-pointer rounded-full bg-white/10 p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-green-200"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="border pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white ring-0 shadow-lg transition duration-200 ease-in-out group-data-[checked]:translate-x-7"
-                    />
-                  </Switch>
-                  <p className="text-lg/3 text-gray-600" aria-live="polite">
-                    {formValues.is_read ? "Read" : "Want to Read"}
-                  </p>
-                </div>
-                <ErrorMessage message={errors?.is_read} />
-              </Field>
-              <Field className="mb-8">
-                <Label className="text-lg/3" htmlFor="description">
-                  Description
-                </Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg"
-                  rows={7}
-                  value={formValues.description}
-                  onChange={handleChange}
-                />
-                <ErrorMessage message={errors?.description} />
-              </Field>
-              <Button
-                className="border rounded bg-green-500 text-white"
-                style={{ padding: "0.75em 1em" }}
-                type="submit"
-              >
-                Update Book Details
-              </Button>
-            </form>
-          </div>
-        ) : (
-          <div className="mb-9">
-            <h2 className="h1 text-center">Book Details Unavailable</h2>
-          </div>
-        )}
+              <ErrorMessage message={errors?.title} />
+            </Field>
+            <Field className="mb-8">
+              <Label className="text-lg/3" htmlFor="author">
+                Author
+              </Label>
+              <Input
+                className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
+                id="author"
+                name="author"
+                type="text"
+                value={formValues.author}
+                onChange={handleChange}
+              />
+              <ErrorMessage message={errors?.author} />
+            </Field>
+            <Field className="mb-8">
+              <Label className="text-lg/3" htmlFor="genre">
+                Genre
+              </Label>
+              <Input
+                className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
+                id="genre"
+                name="genre"
+                type="text"
+                value={formValues.genre}
+                onChange={handleChange}
+              />
+              <ErrorMessage message={errors?.genre} />
+            </Field>
+            <Field className="mb-8">
+              <Label className="text-lg/3" htmlFor="is_read">
+                Status
+              </Label>
+              <div className="flex flex-row gap-2 items-center justify-start mt-3">
+                <Switch
+                  id="is_read"
+                  name="is_read"
+                  checked={formValues.is_read}
+                  onChange={(checked) =>
+                    handleChange({
+                      target: { name: "is_read", value: checked },
+                    })
+                  }
+                  className="border group relative flex h-7 w-14 cursor-pointer rounded-full bg-white/10 p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-green-200"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="border pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white ring-0 shadow-lg transition duration-200 ease-in-out group-data-[checked]:translate-x-7"
+                  />
+                </Switch>
+                <p className="text-lg/3 text-gray-600" aria-live="polite">
+                  {formValues.is_read ? "Read" : "Want to Read"}
+                </p>
+              </div>
+              <ErrorMessage message={errors?.is_read} />
+            </Field>
+            <Field className="mb-8">
+              <Label className="text-lg/3" htmlFor="description">
+                Description
+              </Label>
+              <Textarea
+                id="description"
+                name="description"
+                className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg"
+                rows={7}
+                value={formValues.description}
+                onChange={handleChange}
+              />
+              <ErrorMessage message={errors?.description} />
+            </Field>
+            <Button
+              className="border rounded bg-green-500 text-white"
+              style={{ padding: "0.75em 1em" }}
+              type="submit"
+            >
+              Update Book Details
+            </Button>
+          </form>
+        </div>
       </div>
+      <ToastContainer />
     </Modal>
   );
 };
