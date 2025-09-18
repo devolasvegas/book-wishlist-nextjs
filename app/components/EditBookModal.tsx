@@ -43,6 +43,7 @@ const EditBookModal = ({
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>();
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
   const addBook = useBookStore((state: BookStore) => state.addBook);
 
@@ -106,6 +107,9 @@ const EditBookModal = ({
           });
 
           setLoading(false);
+
+          // Keep users from submitting the same book multiple times
+          setIsSubmitDisabled(true);
 
           return;
         }
@@ -254,9 +258,14 @@ const EditBookModal = ({
               <ErrorMessage message={errors?.description} />
             </Field>
             <Button
-              className="border rounded bg-green-500 text-white"
+              className={`border rounded bg-green-500 text-white${
+                loading || isSubmitDisabled
+                  ? " opacity-50 bg-green-700 cursor-not-allowed"
+                  : ""
+              }`}
               style={{ padding: "0.75em 1em" }}
               type="submit"
+              disabled={loading || isSubmitDisabled}
             >
               {buttonText}
             </Button>
