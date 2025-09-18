@@ -6,7 +6,8 @@ import DeleteBookToast from "./DeleteBookToast";
 
 import { deleteBook } from "../actions";
 
-import { useBookStore, type Book } from "../store/useBookStore";
+import { useBookStore } from "../providers/book-store-provider";
+import { type Book } from "../stores/book-store";
 
 interface BookCardProps {
   book: Book;

@@ -7,7 +7,8 @@ import { Button } from "@headlessui/react";
 
 import EditBookModal from "./EditBookModal";
 
-import { BookStore, useBookStore, type Book } from "../store/useBookStore";
+import { useBookStore } from "../providers/book-store-provider";
+import { BookStore, type Book } from "../stores/book-store";
 
 const BookDetail = ({
   id,

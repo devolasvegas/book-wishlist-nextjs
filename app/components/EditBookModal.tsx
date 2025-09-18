@@ -15,8 +15,9 @@ import {
 
 import Modal from "./Modal";
 
-import { updateBook, addBook } from "../actions";
-import { type Book } from "../store/useBookStore";
+import { updateBook, addBook as addBookAction } from "../actions";
+import { useBookStore } from "../providers/book-store-provider";
+import { type Book, BookStore } from "../stores/book-store";
 import { bookSchema } from "../lib/zodSchemata";
 
 const EditBookModal = ({
@@ -43,7 +44,10 @@ const EditBookModal = ({
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>();
 
+  const addBook = useBookStore((state: BookStore) => state.addBook);
+
   const formTitle = isUpdate ? "Edit Book Details" : "Add NewBook";
+  const buttonText = isUpdate ? "Update Book Details" : "Add Book";
 
   useEffect(() => {
     if (book) {
@@ -87,21 +91,38 @@ const EditBookModal = ({
 
       if (!isUpdate) {
         // Handle adding a new book
-        response = await addBook(book as Book);
+        response = await addBookAction(book as Book);
       } else {
         // Handle updating an existing book
         response = await updateBook(id, book as Book);
       }
 
-      if (!response.message) {
-        if (onUpdate && response.book) {
+      // Successful database operation
+      if (!response.message && response.book) {
+        // add new book to Zustand store and show success toast
+        if (!isUpdate) {
+          addBook(response.book as Book);
+          toast("New book added successfully!", {
+            type: "success",
+          });
+
+          setLoading(false);
+
+          return;
+        }
+
+        // Update local state for BookDetail component and show success toast
+        if (onUpdate) {
           onUpdate(response.book as Book);
         }
 
         toast("Book details updated successfully!", {
           type: "success",
         });
+
+        setLoading(false);
       } else {
+        // Failed database operation
         toast(response.message, { type: "error" });
       }
     } catch (error) {
@@ -120,8 +141,6 @@ const EditBookModal = ({
         setErrors(fieldErrors);
       }
     }
-
-    setLoading(false);
   };
 
   const ErrorMessage = ({ message }: { message: string | undefined }) => {
@@ -240,7 +259,7 @@ const EditBookModal = ({
               style={{ padding: "0.75em 1em" }}
               type="submit"
             >
-              Update Book Details
+              {buttonText}
             </Button>
           </form>
         </div>

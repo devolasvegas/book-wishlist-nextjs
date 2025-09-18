@@ -6,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
+import { BookStoreProvider } from "./providers/book-store-provider";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -36,7 +38,7 @@ export default function RootLayout({
         <div className="flex flex-col justify-between h-full">
           <div>
             <Header />
-            {children}
+            <BookStoreProvider>{children}</BookStoreProvider>
             <ToastContainer
               position="top-right"
               autoClose={5000}

@@ -3,8 +3,8 @@
 import { use, useEffect, useState } from "react";
 import { Button } from "@headlessui/react";
 
-import { addBook } from "../actions";
-import { useBookStore, type BookStore, type Book } from "../store/useBookStore";
+import { useBookStore } from "../providers/book-store-provider";
+import { type BookStore, type Book } from "../stores/book-store";
 
 import BookCard from "./BookCard";
 import EditBookModal from "./EditBookModal";
@@ -24,7 +24,6 @@ const BookList = ({
   }, [allBooks, setBooks]);
 
   const bookList = useBookStore((state) => state.books);
-  const { addBook: addBookZustand } = useBookStore((state) => state);
 
   const handleAddBook = () => {
     setIsOpen(true);
