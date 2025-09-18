@@ -117,3 +117,19 @@ export async function updateBook(
     book: response.data.update_books_by_pk,
   };
 }
+
+export async function deleteBook(id: string) {
+  const mutation = gql`
+    mutation deleteBook($id: uuid!) {
+      delete_books_by_pk(id: $id) {
+        id
+      }
+    }
+  `;
+
+  return await client.mutate({
+    mutation,
+    variables: { id },
+    errorPolicy: "all",
+  });
+}

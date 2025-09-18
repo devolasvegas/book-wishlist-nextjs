@@ -1,12 +1,62 @@
 import Link from "next/link";
-import { type Book } from "../store/useBookStore";
 import { Button } from "@headlessui/react";
+import { ToastContainer, toast } from "react-toastify";
+
+import DeleteBookToast from "./DeleteBookToast";
+
+import { deleteBook } from "../actions";
+
+import { type Book } from "../store/useBookStore";
 
 interface BookCardProps {
   book: Book;
 }
 
 const BookCard: React.FC<BookCardProps> = ({ book }) => {
+  const handleDelete = () => {
+    return toast(DeleteBookToast, {
+      closeButton: false,
+      // remove the padding on the toast wrapper
+      // make it 400px width
+      // add a thin purple border because I like purple
+      className: "p-0 w-[400px] border border-red-600/40",
+      ariaLabel: "Email received",
+      onClose: (reason?: boolean | string) =>
+        handleToastClose(reason as string),
+    });
+  };
+
+  const handleToastClose = async (reason: string) => {
+    if (reason === "delete") {
+      console.log("Deleting book with id:", book.id);
+
+      // Returns { data: ... } or { errors: [ { message: string } ] }
+      const response = await deleteBook(book.id);
+
+      // Show our error(s) if we have them ...
+      if (response.errors) {
+        console.error("Error deleting book:", response.errors[0].message);
+
+        toast.error(
+          `Failed to delete the book: ${response.errors[0].message}`,
+          {
+            className: "border border-red-600/40",
+          }
+        );
+
+        return;
+      }
+
+      // ... or process the successful response
+      console.log("Delete response:", response);
+      toast.success("Book deleted successfully!");
+    } else if (reason === "cancel") {
+      toast.info("Book deletion cancelled.", {
+        className: "border border-yellow-600/40",
+      });
+    }
+  };
+
   return (
     <div className="p-4 border rounded shadow-sm">
       <div className="grid gap-6">
@@ -42,9 +92,11 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
           <Button
             className="border rounded bg-red-600 text-white text-lg"
             style={{ padding: "0.75em 1em" }}
+            onClick={() => handleDelete && handleDelete()}
           >
             Delete Book
           </Button>
+          <ToastContainer autoClose={false} />
         </div>
       </div>
     </div>
