@@ -33,16 +33,17 @@ const EditBookModal = ({
   book?: Book;
   onUpdate?: (book: Book) => void;
 }) => {
-  const [formValues, setFormValues] = useState<Book>({
+  const defaultFormValues = {
     id: "",
     title: "",
     author: "",
     genre: "",
     description: "",
     is_read: false,
-  });
+  };
+  const [formValues, setFormValues] = useState<Book>(defaultFormValues);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<{ [key: string]: string }>();
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
   const addBook = useBookStore((state: BookStore) => state.addBook);
@@ -146,18 +147,27 @@ const EditBookModal = ({
     }
   };
 
+  const handleClose = () => {
+    console.log("Closing modal");
+    // Reset form state on close
+    setFormValues(defaultFormValues);
+    setErrors({});
+    setIsSubmitDisabled(false);
+    onClose();
+  };
+
   const ErrorMessage = ({ message }: { message: string | undefined }) => {
     return <div className="text-red-500 text-sm mt-1">{message}</div>;
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <div className="px-10 py-10 border rounded shadow-sm bg-white max-w-3xl mx-auto relative">
         <div className="absolute right-10 top-6">
           <button
             className="modal-close is-large"
             aria-label="close"
-            onClick={onClose}
+            onClick={handleClose}
           >
             Close
           </button>
