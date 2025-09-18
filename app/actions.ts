@@ -133,3 +133,7 @@ export async function deleteBook(id: string) {
     errorPolicy: "all",
   });
 }
+
+export async function addBook(formValues: Book) {
+  console.log("Adding new book:");
+}
