@@ -6,13 +6,15 @@ import DeleteBookToast from "./DeleteBookToast";
 
 import { deleteBook } from "../actions";
 
-import { type Book } from "../store/useBookStore";
+import { useBookStore, type Book } from "../store/useBookStore";
 
 interface BookCardProps {
   book: Book;
 }
 
 const BookCard: React.FC<BookCardProps> = ({ book }) => {
+  const { deleteBook: deleteBookZustand } = useBookStore((state) => state);
+
   const handleDelete = () => {
     return toast(DeleteBookToast, {
       closeButton: false,
@@ -49,6 +51,10 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
 
       // ... or process the successful response
       console.log("Delete response:", response);
+
+      // Update Zustand store
+      deleteBookZustand(book.id);
+
       toast.success("Book deleted successfully!");
     } else if (reason === "cancel") {
       toast.info("Book deletion cancelled.", {
