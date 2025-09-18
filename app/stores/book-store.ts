@@ -40,10 +40,7 @@ export const createBookStore = (initState: BooksState = defaultInitState) => {
           }),
         setBooks: (books) => set({ books }),
         addBook: (book) =>
-          set((state) => {
-            console.log({ state, book });
-            return { ...state, books: [...state.books, book] };
-          }),
+          set((state) => ({ ...state, books: [...state.books, book] })),
         updateBookStatus: (id, status) =>
           set((state) => ({
             books: state.books.map((book) =>

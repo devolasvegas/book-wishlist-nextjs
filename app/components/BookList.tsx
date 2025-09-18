@@ -42,7 +42,7 @@ const BookList = ({
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {bookList?.length
-          ? allBooks.map((book: Book) => <BookCard key={book.id} book={book} />)
+          ? bookList.map((book: Book) => <BookCard key={book.id} book={book} />)
           : null}
         {message ? <p>{message}</p> : null}
       </div>

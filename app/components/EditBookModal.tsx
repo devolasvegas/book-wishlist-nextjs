@@ -51,7 +51,6 @@ const EditBookModal = ({
 
   useEffect(() => {
     if (book) {
-      console.log("Setting form values:", book);
       setFormValues(book);
     }
   }, [book]);
