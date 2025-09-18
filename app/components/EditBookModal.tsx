@@ -15,16 +15,18 @@ import {
 
 import Modal from "./Modal";
 
-import { updateBook } from "../actions";
+import { updateBook, addBook } from "../actions";
 import { Book, BookStore, useBookStore } from "../store/useBookStore";
 import { bookSchema } from "../lib/zodSchemata";
 
 const EditBookModal = ({
   isOpen,
   onClose,
+  isUpdate = true,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  isUpdate?: boolean;
 }) => {
   const [formValues, setFormValues] = useState<Book>({
     id: "",
@@ -38,6 +40,8 @@ const EditBookModal = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>();
   const bookDetail = useBookStore((state: BookStore) => state.book);
   const setBook = useBookStore((state: BookStore) => state.setBook);
+
+  const formTitle = isUpdate ? "Edit Book Details" : "Add NewBook";
 
   useEffect(() => {
     if (bookDetail) {
@@ -74,7 +78,17 @@ const EditBookModal = ({
       // and set the errors state
       bookSchema.parse(formValues);
 
-      const response = await updateBook(id, book as Book);
+      // If validation passes, proceed to update the book
+
+      let response;
+
+      if (!isUpdate) {
+        // Handle adding a new book
+        response = await addBook(book as Book);
+      } else {
+        // Handle updating an existing book
+        response = await updateBook(id, book as Book);
+      }
 
       if (!response.message) {
         setBook({ id, ...response.book } as Book);
@@ -128,7 +142,7 @@ const EditBookModal = ({
                 style={{ backdropFilter: "blur(3px)" }}
               />
             )}
-            <h2 className="h1">Edit Book Details</h2>
+            <h2 className="h1">{formTitle}</h2>
             <form onSubmit={(e) => handleSubmit(e, formValues)}>
               <input type="hidden" name="id" value={bookDetail.id} />
               <Field className="mb-8">
