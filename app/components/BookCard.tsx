@@ -69,14 +69,14 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
     <div className="pt-8 px-12 pb-6 border border-blueberrywhip rounded shadow-sm">
       <div className="grid gap-6">
         <div className="mb-4">
-          <div className="mb-2">
+          <div className="mb-4">
             {book.is_read ? (
               <div title="Have Read">
-                <BookCheck color="#00D390" />
+                <BookCheck color="#00D390" size={"32px"} />
               </div>
             ) : (
               <div title="Want to Read">
-                <BookAlert color="#E0A82E" />
+                <BookAlert color="#E0A82E" size={"32px"} />
               </div>
             )}
           </div>
