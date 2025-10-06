@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        knightsarmor: "#5C5C5C",
+        fusionred: "#FF6266",
+        driedgoldenrod: "#E0A82E",
+        caribbeangreen: "#00D390",
       },
     },
     keyframes: {
