@@ -12,6 +12,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         knightsarmor: "#5C5C5C",
+        blueberrywhip: "D1D5DB",
         fusionred: "#FF6266",
         driedgoldenrod: "#E0A82E",
         caribbeangreen: "#00D390",

@@ -65,39 +65,34 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
   };
 
   return (
-    <div className="p-4 border rounded shadow-sm">
+    <div className="pt-8 px-12 pb-6 border border-blueberrywhip rounded shadow-sm">
       <div className="grid gap-6">
         <div className="mb-4">
+          {book.is_read ? "Have Read" : "Want to Read"}
+          <p className="mb-4">
+            <span className="sr-only">
+              {book.is_read ? "Have Read" : "Want to Read"}
+            </span>
+          </p>
           <h2
-            className="text-3xl font-semibold"
+            className="text-2xl font-semibold"
             style={{ marginBottom: "0.5em" }}
           >
             {book.title}
           </h2>
-          <p className="text-xl text-gray-500">by {book.author}</p>
-          <p className="text-xl text-gray-600">Genre: {book.genre}</p>
-          <p className="mt-6">
-            <span
-              className={`px-2 py-1 text-lg rounded ${
-                book.is_read
-                  ? "bg-green-100 text-green-800"
-                  : "bg-yellow-100 text-yellow-800"
-              }`}
-            >
-              {book.is_read ? "Have Read" : "Want to Read"}
-            </span>
-          </p>
+          <p className="text-lg">Author {book.author}</p>
+          <p className="text-lg">Genre: {book.genre}</p>
         </div>
         <div className="flex gap-2">
           <Link
-            className="border rounded bg-blue-500 text-white text-lg"
+            className="border border-driedgoldenrod rounded bg-transparent text-driedgoldenrod text-lg"
             style={{ padding: "0.75em 1em" }}
             href={`/books/${book.id}`}
           >
-            View Book Details
+            View Details
           </Link>
           <Button
-            className="border rounded bg-red-600 text-white text-lg"
+            className="border border-fusionred rounded bg-transparent text-fusionred text-lg"
             style={{ padding: "0.75em 1em" }}
             onClick={() => handleDelete && handleDelete()}
           >
