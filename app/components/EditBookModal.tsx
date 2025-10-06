@@ -165,7 +165,7 @@ const EditBookModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
-      <div className="px-10 py-10 border rounded shadow-sm bg-white max-w-3xl mx-auto relative">
+      <div className="px-12 py-12 pb-4 border rounded shadow-sm bg-white max-w-3xl mx-auto relative">
         <div className="absolute right-10 top-6">
           <button
             className="modal-close is-large border border-knightsarmor text-knightsarmor rounded-full"
