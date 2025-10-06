@@ -12,7 +12,9 @@ export default async function Home() {
   return (
     <main>
       <div className="container mx-auto px-4 py-24">
-        <Logo />
+        <div className="mb-8">
+          <Logo />
+        </div>
         <h1 className="h1 text-center sr-only">Story Shelf Reading List App</h1>
         <Suspense fallback={<CardsSkeleton />}>
           <BookList books={books} />

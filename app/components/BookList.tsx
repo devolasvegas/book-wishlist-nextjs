@@ -31,16 +31,16 @@ const BookList = ({
 
   return (
     <div>
-      <div className="flex md:justify-between mb-6 gap-6">
+      <div className="flex flex-col md:flex-row md:justify-between mb-10 gap-8">
         <div>
-          <p style={{ maxWidth: "40em" }}>
+          <p className="text-xl leading-relaxed" style={{ maxWidth: "40em" }}>
             Keep track of the books you love, the ones you own, and the stories
             still on your wishlist. Build your personal library on StoryShelf —
             your collection, all in one place.
           </p>
         </div>
         <Button
-          className="border rounded bg-green-500 text-white text-lg"
+          className="border border-caribbeangreen rounded bg-transparent text-caribbeangreen text-lg"
           style={{ padding: "0.75em 1em" }}
           onClick={() => handleAddBook()}
         >
