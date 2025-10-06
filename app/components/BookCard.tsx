@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@headlessui/react";
+import { BookCheck, BookAlert } from "lucide-react";
 import { toast } from "react-toastify";
 
 import DeleteBookToast from "./DeleteBookToast";
@@ -68,12 +69,17 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
     <div className="pt-8 px-12 pb-6 border border-blueberrywhip rounded shadow-sm">
       <div className="grid gap-6">
         <div className="mb-4">
-          {book.is_read ? "Have Read" : "Want to Read"}
-          <p className="mb-4">
-            <span className="sr-only">
-              {book.is_read ? "Have Read" : "Want to Read"}
-            </span>
-          </p>
+          <div className="mb-2">
+            {book.is_read ? (
+              <div title="Have Read">
+                <BookCheck color="#00D390" />
+              </div>
+            ) : (
+              <div title="Want to Read">
+                <BookAlert color="#E0A82E" />
+              </div>
+            )}
+          </div>
           <h2
             className="text-2xl font-semibold"
             style={{ marginBottom: "0.5em" }}
