@@ -48,7 +48,7 @@ const EditBookModal = ({
 
   const addBook = useBookStore((state: BookStore) => state.addBook);
 
-  const formTitle = isUpdate ? "Edit Book Details" : "Add NewBook";
+  const formTitle = isUpdate ? "Edit Book Details" : "Add New Book";
   const buttonText = isUpdate ? "Update Book Details" : "Add Book";
 
   useEffect(() => {
@@ -168,11 +168,12 @@ const EditBookModal = ({
       <div className="px-10 py-10 border rounded shadow-sm bg-white max-w-3xl mx-auto relative">
         <div className="absolute right-10 top-6">
           <button
-            className="modal-close is-large"
+            className="modal-close is-large border border-knightsarmor text-knightsarmor rounded-full"
+            style={{ width: "2em", height: "2em" }}
             aria-label="close"
             onClick={handleClose}
           >
-            Close
+            X
           </button>
         </div>
         <div className="mb-9">
@@ -192,7 +193,7 @@ const EditBookModal = ({
                 Title
               </Label>
               <Input
-                className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
+                className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
                 id="title"
                 name="title"
                 type="text"
@@ -206,7 +207,7 @@ const EditBookModal = ({
                 Author
               </Label>
               <Input
-                className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
+                className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
                 id="author"
                 name="author"
                 type="text"
@@ -220,7 +221,7 @@ const EditBookModal = ({
                 Genre
               </Label>
               <Input
-                className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg/3"
+                className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
                 id="genre"
                 name="genre"
                 type="text"
@@ -243,7 +244,7 @@ const EditBookModal = ({
                       target: { name: "is_read", value: checked },
                     })
                   }
-                  className="border group relative flex h-7 w-14 cursor-pointer rounded-full bg-white/10 p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-green-200"
+                  className="border group relative flex h-7 w-14 cursor-pointer rounded-full bg-driedgoldenrod p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-caribbeangreen"
                 >
                   <span
                     aria-hidden="true"
@@ -251,19 +252,19 @@ const EditBookModal = ({
                   />
                 </Switch>
                 <p className="text-lg/3 text-gray-600" aria-live="polite">
-                  {formValues.is_read ? "Read" : "Want to Read"}
+                  {formValues.is_read ? "Have Read" : "Want to Read"}
                 </p>
               </div>
               <ErrorMessage message={errors?.is_read} />
             </Field>
             <Field className="mb-8">
               <Label className="text-lg/3" htmlFor="description">
-                Description
+                Book Description
               </Label>
               <Textarea
                 id="description"
                 name="description"
-                className="mt-3 block w-full rounded-lg border py-1.5 px-3 text-lg"
+                className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg"
                 rows={7}
                 value={formValues.description}
                 onChange={handleChange}
@@ -271,9 +272,9 @@ const EditBookModal = ({
               <ErrorMessage message={errors?.description} />
             </Field>
             <Button
-              className={`border rounded bg-green-500 text-white${
+              className={`border border-caribbeangreen rounded bg-transparent text-caribbeangreen text-lg${
                 loading || isSubmitDisabled
-                  ? " opacity-50 bg-green-700 cursor-not-allowed"
+                  ? " opacity-50 cursor-not-allowed"
                   : ""
               }`}
               style={{ padding: "0.75em 1em" }}
