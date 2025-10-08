@@ -91,14 +91,14 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         </div>
         <div className="flex gap-2">
           <Link
-            className="border border-driedgoldenrod rounded bg-transparent text-driedgoldenrod text-lg"
+            className="border border-driedgoldenrod rounded bg-transparent text-driedgoldenrod text-lg hover:bg-driedgoldenrod hover:text-white transition-all duration-300"
             style={{ padding: "0.75em 1em" }}
             href={`/books/${book.id}`}
           >
             View Details
           </Link>
           <Button
-            className="border border-fusionred rounded bg-transparent text-fusionred text-lg"
+            className="border border-fusionred rounded bg-transparent text-fusionred text-lg hover:bg-fusionred hover:text-white transition-all duration-300"
             style={{ padding: "0.75em 1em" }}
             onClick={() => handleDelete && handleDelete()}
           >
