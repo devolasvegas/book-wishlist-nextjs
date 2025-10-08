@@ -7,7 +7,8 @@ import { useBookStore } from "../providers/book-store-provider";
 import { type BookStore, type Book } from "../stores/book-store";
 
 import BookCard from "./BookCard";
-import EditBookModal from "./EditBookModal";
+import BookModal from "./BookModal";
+import BookForm from "./BookForm";
 
 const BookList = ({
   books,
@@ -40,7 +41,7 @@ const BookList = ({
           </p>
         </div>
         <Button
-          className="border border-caribbeangreen rounded bg-transparent text-caribbeangreen text-lg"
+          className="border border-caribbeangreen rounded bg-transparent text-caribbeangreen text-lg hover:bg-caribbeangreen hover:text-white transition-all duration-300"
           style={{ padding: "0.75em 1em" }}
           onClick={() => handleAddBook()}
         >
@@ -53,11 +54,9 @@ const BookList = ({
           : null}
         {message ? <p>{message}</p> : null}
       </div>
-      <EditBookModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        isUpdate={false}
-      />
+      <BookModal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <BookForm isUpdate={false} />
+      </BookModal>
     </div>
   );
 };

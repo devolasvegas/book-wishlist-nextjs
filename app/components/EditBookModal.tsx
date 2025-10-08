@@ -13,8 +13,6 @@ import {
   Textarea,
 } from "@headlessui/react";
 
-import Modal from "./Modal";
-
 import { updateBook, addBook as addBookAction } from "../actions";
 import { useBookStore } from "../providers/book-store-provider";
 import { type Book, BookStore } from "../stores/book-store";
@@ -164,129 +162,132 @@ const EditBookModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose}>
-      <div className="px-12 py-12 pb-4 border rounded shadow-sm bg-white max-w-3xl mx-auto relative">
-        <div className="absolute right-10 top-6">
-          <button
-            className="modal-close is-large border border-knightsarmor text-knightsarmor rounded-full"
-            style={{ width: "2em", height: "2em" }}
-            aria-label="close"
-            onClick={handleClose}
-          >
-            X
-          </button>
-        </div>
-        <div className="mb-9">
-          {loading && (
-            <div
-              className="absolute inset-0"
-              style={{ backdropFilter: "blur(3px)" }}
-            />
-          )}
-          <h2 className="h1">{formTitle}</h2>
-          <form onSubmit={(e) => handleSubmit(e, formValues)}>
-            {isUpdate && formValues.id ? (
-              <input type="hidden" name="id" value={formValues.id} />
-            ) : null}
-            <Field className="mb-8">
-              <Label className="text-lg/3" htmlFor="title">
-                Title
-              </Label>
-              <Input
-                className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
-                id="title"
-                name="title"
-                type="text"
-                value={formValues.title}
-                onChange={handleChange}
-              />
-              <ErrorMessage message={errors?.title} />
-            </Field>
-            <Field className="mb-8">
-              <Label className="text-lg/3" htmlFor="author">
-                Author
-              </Label>
-              <Input
-                className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
-                id="author"
-                name="author"
-                type="text"
-                value={formValues.author}
-                onChange={handleChange}
-              />
-              <ErrorMessage message={errors?.author} />
-            </Field>
-            <Field className="mb-8">
-              <Label className="text-lg/3" htmlFor="genre">
-                Genre
-              </Label>
-              <Input
-                className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
-                id="genre"
-                name="genre"
-                type="text"
-                value={formValues.genre}
-                onChange={handleChange}
-              />
-              <ErrorMessage message={errors?.genre} />
-            </Field>
-            <Field className="mb-8">
-              <Label className="text-lg/3" htmlFor="is_read">
-                Status
-              </Label>
-              <div className="flex flex-row gap-2 items-center justify-start mt-3">
-                <Switch
-                  id="is_read"
-                  name="is_read"
-                  checked={formValues.is_read}
-                  onChange={(checked) =>
-                    handleChange({
-                      target: { name: "is_read", value: checked },
-                    })
-                  }
-                  className="border group relative flex h-7 w-14 cursor-pointer rounded-full bg-driedgoldenrod p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-caribbeangreen"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="border pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white ring-0 shadow-lg transition duration-200 ease-in-out group-data-[checked]:translate-x-7"
-                  />
-                </Switch>
-                <p className="text-lg/3 text-gray-600" aria-live="polite">
-                  {formValues.is_read ? "Have Read" : "Want to Read"}
-                </p>
-              </div>
-              <ErrorMessage message={errors?.is_read} />
-            </Field>
-            <Field className="mb-8">
-              <Label className="text-lg/3" htmlFor="description">
-                Book Description
-              </Label>
-              <Textarea
-                id="description"
-                name="description"
-                className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg"
-                rows={7}
-                value={formValues.description}
-                onChange={handleChange}
-              />
-              <ErrorMessage message={errors?.description} />
-            </Field>
-            <Button
-              className={`border border-caribbeangreen rounded bg-transparent text-caribbeangreen text-lg${
-                loading || isSubmitDisabled
-                  ? " opacity-50 cursor-not-allowed"
-                  : ""
-              }`}
-              style={{ padding: "0.75em 1em" }}
-              type="submit"
-              disabled={loading || isSubmitDisabled}
+    <div className={`modal ${isOpen ? "is-active" : ""}`}>
+      <div className="modal-background" onClick={handleClose}></div>
+      <div className="modal-content">
+        <div className="px-12 py-12 pb-4 border rounded shadow-sm bg-white max-w-3xl mx-auto relative">
+          <div className="absolute right-10 top-6">
+            <button
+              className="modal-close is-large border border-knightsarmor text-knightsarmor rounded-full"
+              style={{ width: "2em", height: "2em" }}
+              aria-label="close"
+              onClick={handleClose}
             >
-              {buttonText}
-            </Button>
-          </form>
+              X
+            </button>
+          </div>
+          <div className="mb-9">
+            {loading && (
+              <div
+                className="absolute inset-0"
+                style={{ backdropFilter: "blur(3px)" }}
+              />
+            )}
+            <h2 className="h1">{formTitle}</h2>
+            <form onSubmit={(e) => handleSubmit(e, formValues)}>
+              {isUpdate && formValues.id ? (
+                <input type="hidden" name="id" value={formValues.id} />
+              ) : null}
+              <Field className="mb-8">
+                <Label className="text-lg/3" htmlFor="title">
+                  Title
+                </Label>
+                <Input
+                  className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
+                  id="title"
+                  name="title"
+                  type="text"
+                  value={formValues.title}
+                  onChange={handleChange}
+                />
+                <ErrorMessage message={errors?.title} />
+              </Field>
+              <Field className="mb-8">
+                <Label className="text-lg/3" htmlFor="author">
+                  Author
+                </Label>
+                <Input
+                  className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
+                  id="author"
+                  name="author"
+                  type="text"
+                  value={formValues.author}
+                  onChange={handleChange}
+                />
+                <ErrorMessage message={errors?.author} />
+              </Field>
+              <Field className="mb-8">
+                <Label className="text-lg/3" htmlFor="genre">
+                  Genre
+                </Label>
+                <Input
+                  className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg/3"
+                  id="genre"
+                  name="genre"
+                  type="text"
+                  value={formValues.genre}
+                  onChange={handleChange}
+                />
+                <ErrorMessage message={errors?.genre} />
+              </Field>
+              <Field className="mb-8">
+                <Label className="text-lg/3" htmlFor="is_read">
+                  Status
+                </Label>
+                <div className="flex flex-row gap-2 items-center justify-start mt-3">
+                  <Switch
+                    id="is_read"
+                    name="is_read"
+                    checked={formValues.is_read}
+                    onChange={(checked) =>
+                      handleChange({
+                        target: { name: "is_read", value: checked },
+                      })
+                    }
+                    className="border group relative flex h-7 w-14 cursor-pointer rounded-full bg-driedgoldenrod p-1 transition-colors duration-200 ease-in-out focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-caribbeangreen"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="border pointer-events-none inline-block size-5 translate-x-0 rounded-full bg-white ring-0 shadow-lg transition duration-200 ease-in-out group-data-[checked]:translate-x-7"
+                    />
+                  </Switch>
+                  <p className="text-lg/3 text-gray-600" aria-live="polite">
+                    {formValues.is_read ? "Have Read" : "Want to Read"}
+                  </p>
+                </div>
+                <ErrorMessage message={errors?.is_read} />
+              </Field>
+              <Field className="mb-8">
+                <Label className="text-lg/3" htmlFor="description">
+                  Book Description
+                </Label>
+                <Textarea
+                  id="description"
+                  name="description"
+                  className="mt-3 block w-full rounded-lg border py-4 px-4 text-lg"
+                  rows={7}
+                  value={formValues.description}
+                  onChange={handleChange}
+                />
+                <ErrorMessage message={errors?.description} />
+              </Field>
+              <Button
+                className={`border border-caribbeangreen rounded bg-transparent text-caribbeangreen text-lg${
+                  loading || isSubmitDisabled
+                    ? " opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                style={{ padding: "0.75em 1em" }}
+                type="submit"
+                disabled={loading || isSubmitDisabled}
+              >
+                {buttonText}
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
-    </Modal>
+    </div>
   );
 };
 
