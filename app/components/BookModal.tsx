@@ -1,6 +1,8 @@
 "use client";
 import { ReactNode } from "react";
 
+import CloseModalIcon from "./CloseModalIcon";
+
 const BookModal = ({
   isOpen,
   onClose,
@@ -21,12 +23,12 @@ const BookModal = ({
         <div className="px-12 py-12 pb-4 border rounded shadow-sm bg-white max-w-3xl mx-auto relative">
           <div className="absolute right-10 top-6">
             <button
-              className="modal-close is-large border border-knightsarmor text-knightsarmor rounded-full"
+              className="modal-close"
               style={{ width: "2em", height: "2em" }}
               aria-label="close"
               onClick={handleClose}
             >
-              X
+              <CloseModalIcon />
             </button>
           </div>
           <div className="mb-9">{children}</div>
