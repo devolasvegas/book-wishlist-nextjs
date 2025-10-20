@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Button } from "@headlessui/react";
-import { BookCheck, BookAlert } from "lucide-react";
 import { toast } from "react-toastify";
 
 import BookModal from "./BookModal";
 import BookDetail from "./BookDetail";
+import BookStatusIcon from "./BookStatusIcon";
 import DeleteBookToast from "./DeleteBookToast";
 
 import { deleteBook } from "../actions";
@@ -84,15 +84,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         <div className="grid gap-6">
           <div className="mb-4">
             <div className="mb-4">
-              {bookDetail.is_read ? (
-                <div title="Have Read">
-                  <BookCheck color="#00D390" size={"32px"} />
-                </div>
-              ) : (
-                <div title="Want to Read">
-                  <BookAlert color="#E0A82E" size={"32px"} />
-                </div>
-              )}
+              <BookStatusIcon isRead={bookDetail.is_read} />
             </div>
             <h2
               className="text-2xl font-semibold"
