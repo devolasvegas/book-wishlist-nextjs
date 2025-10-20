@@ -2,6 +2,8 @@
 
 import { Button } from "@headlessui/react";
 
+import BookStatusIcon from "./BookStatusIcon";
+
 import { type Book } from "../stores/book-store";
 
 const BookDetail = ({
@@ -16,28 +18,23 @@ const BookDetail = ({
       {book ? (
         <>
           <div className="mb-9">
-            <h1 className="h1">{book.title}</h1>
-            <p className="text-gray-500">by {book.author}</p>
-            <p className="text-md text-gray-600">Genre: {book.genre}</p>
-            <p className="mt-2">
-              <span
-                className={`px-2 py-1 text-s rounded ${
-                  book.is_read
-                    ? "bg-green-100 text-green-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
-              >
-                {book.is_read ? "Have Read" : "Want to Read"}
-              </span>
-            </p>
+            <h1 className="h1">Book details.</h1>
+            <h2 className="h2">{book.title}</h2>
+            <div className="mb-3">
+              <BookStatusIcon isRead={book.is_read} />
+            </div>
+            <p className="text-lg text-gray-500 mb-1">Author: {book.author}</p>
+            <p className="text-lg text-gray-600">Genre: {book.genre}</p>
           </div>
-          <div className="mb-9">
+          <div className="mb-16">
             {book.description ? (
-              <p className="text-md text-gray-600">{book.description}</p>
+              <p className="text-md text-gray-600 leading-loose">
+                {book.description}
+              </p>
             ) : null}
           </div>
           <Button
-            className="border rounded bg-blue-500 text-white"
+            className="border border-driedgoldenrod rounded bg-transparent text-driedgoldenrod text-lg hover:bg-driedgoldenrod hover:text-white transition-all duration-300"
             style={{ padding: "0.75em 1em" }}
             onClick={viewModeHandler}
             type="button"
