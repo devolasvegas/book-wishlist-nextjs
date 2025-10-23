@@ -13,7 +13,7 @@ export default async function Home() {
   return (
     <main>
       <div className="container mx-auto px-4 py-24">
-        <div className="mb-8 flex justify-center md:justify-between items-center flex-wrap gap-4">
+        <div className="mb-8 flex justify-center md:justify-between items-center flex-wrap gap-6 md:gap-10">
           <div>
             <Logo />
           </div>
