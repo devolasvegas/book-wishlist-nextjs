@@ -14,9 +14,7 @@ export default async function Home() {
     <main>
       <div className="container mx-auto px-4 py-24">
         <div className="mb-8 flex justify-center md:justify-between items-center flex-wrap gap-6 md:gap-10">
-          <div>
-            <Logo />
-          </div>
+          <Logo />
           <GitHubLink />
         </div>
         <h1 className="h1 text-center sr-only">Story Shelf Reading List App</h1>
